@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Panacea Services (Pvt) Ltd.</title>
+	<link rel="icon" type="image/x-icon" href="image\Panacea.jpg">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #daebfc;
+            display: flex;
+            flex-direction: column;
+            min-height: 50vh;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+        .container {
+            background: #fff;
+            padding: 30px 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            flex: 1 0 auto;
+            margin-top: 100px;
+            margin-bottom: 100px;
+            min-width: 320px;
+            max-width: 400px;
+            display: none;
+            flex-direction:column ;
+            justify-content: center;
+        }
+        .container.active {
+            display: flex;
+        }
+        input[type="password"], input[type="number"], input[type="text"], select {
+            padding: 8px;
+            margin: 10px 0;
+            width: 94%;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        button {
+            padding: 8px 15px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            width: 100%;
+        }
+        button:hover{
+            background: green;
+        }
+        button2 {
+            padding: 8px 15px;
+            background: black;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 40px;
+            font-size: 16px;
+            margin-top: 5px;
+            display: block;
+            margin: 0px auto 0 auto;
+        }
+        button2:hover{
+            background: #e00909;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+        .icon-table {
+            width: 100%;
+            margin: 20px 0;
+        }
+        .icon-table td {
+            padding: 20px 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+        .icon-table img {
+            display: block;
+            margin: 0 auto 10px auto;
+        }
+        .icon-table a {
+            text-decoration: none;
+            color: #00438b;
+        }
+        .icon-table a.disabled-option {
+            pointer-events: none;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        footer {
+            flex-shrink: 0;
+            width: 100%;
+            text-align: center;
+            color: #222;
+            margin-top: 10px;
+            padding-bottom: 10px;
+            border: none;
+            border-radius: 6px;
+            background: #daebfc;
+            font-size: 22px;
+        }
+        @media (max-width: 100px) {
+            .container {
+                padding: 10px 2vw;
+                min-width: unset;
+                max-width: 98vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sign in section -->
+    <div class="container active" id="signin-page">
+        <img src="image\Panacea.jpg" alt="Panacea" width="200" style="display:block; margin:0 auto 10px auto;"><br>
+        <input type="password" id="password" placeholder="Enter password"><br>
+        <button onclick="signin()">Sign in</button>
+        <p id="error" class="error"></p>
+    </div>
+    <!-- Home page section -->
+    <div class="container" id="home-page">
+        <img src="image\Panacea2.jpg" alt="The Panacea Services (Pvt) Ltd." style="height: 5em;"><br><br>
+        <table class="icon-table">
+            <tr>
+                <td>
+                    <a href="#" onclick="showPage('punch-page')">
+                        <img src="https://cdn-icons-png.flaticon.com/128/1231/1231052.png" alt="Punch" width="48"><br>Punch
+                    </a>
+                </td>
+                <td>
+                    <a href="#" class="disabled-option" aria-disabled="true" tabindex="-1" onclick="return false;">
+                        <img src="https://cdn-icons-png.flaticon.com/128/1582/1582043.png" alt="Attendance" width="48"><br>Attendance
+                    </a>
+                </td>
+                <td>
+                    <a href="#" class="disabled-option" aria-disabled="true" tabindex="-1" onclick="return false;">
+                        <img src="https://cdn-icons-png.flaticon.com/128/17487/17487737.png" alt="Overtime" width="48"><br>Overtime
+                    </a>
+                </td>
+            </tr>
+        </table>
+        <!-- Footer -->
+        <footer style="color: black; font-size: 12px;">
+            <br>Developed By:<br>
+            Engr. Md. Hadisur Rahman<br>
+            BSc (BUBT), MSc (JU)<br>
+            IT Officer<br>
+            The Ibn Sina Trust<br>
+            Email: hadisurn@gmail.com<br>
+			Mobile: 01521744196 (WhatsApp)
+        </footer>
+    </div>
+    <!-- Punch Report Page -->
+    <div class="container" id="punch-page">
+        <h2 style="color: #007bff;">Punch Report</h2>
+        <form id="punchForm">
+            <div class="form-group">
+                <label for="fdate">From Date:</label>
+                <div style="display: flex; gap: 5px; max-width: 350px; margin: 0 auto;">
+                    <input type="number" id="fdate-day" maxlength="2" style="width:86px;" placeholder="DAY" required>
+                    <select id="fdate-month" style="width:100px;" required>
+                        <option value="JAN">JAN</option><option value="FEB">FEB</option><option value="MAR">MAR</option>
+                        <option value="APR">APR</option><option value="MAY">MAY</option><option value="JUN">JUN</option>
+                        <option value="JUL">JUL</option><option value="AUG">AUG</option><option value="SEP">SEP</option>
+                        <option value="OCT">OCT</option><option value="NOV">NOV</option><option value="DEC">DEC</option>
+                    </select>
+                    <input type="number" id="fdate-year" maxlength="4" style="width:86px;" placeholder="YEAR" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="tdate">To Date:</label>
+                <div style="display: flex; gap: 5px; max-width: 350px; margin: 0 auto;">
+                    <input type="number" id="tdate-day" maxlength="2" style="width:87px;" placeholder="DAY" required>
+                    <select id="tdate-month" style="width:100px;" required>
+                        <option value="JAN">JAN</option><option value="FEB">FEB</option><option value="MAR">MAR</option>
+                        <option value="APR">APR</option><option value="MAY">MAY</option><option value="JUN">JUN</option>
+                        <option value="JUL">JUL</option><option value="AUG">AUG</option><option value="SEP">SEP</option>
+                        <option value="OCT">OCT</option><option value="NOV">NOV</option><option value="DEC">DEC</option>
+                    </select>
+                    <input type="number" id="tdate-year" maxlength="4" style="width:87px;" placeholder="YEAR" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="empcode">Employee ID:</label>
+                <input type="text" id="empcode" value="P" inputmode="numeric" autocomplete="off" required>
+            </div>
+            <button type="submit">Get Punch Report</button>
+        </form>
+        <div id="punch-report-link" style="margin-top:20px;"></div>
+        <button2 class="button2" onclick="showPage('home-page')">Back</button2>
+    </div>
+    <!-- Attendance Report Page -->
+    <div class="container" id="attendance-page">
+        <h2 style="color: #007bff;">Attendance Report</h2>
+        <form id="attendanceForm">
+            <div class="form-group">
+                <label for="fdate">From Date:</label>
+                <div style="display: flex; gap: 5px; max-width: 350px; margin: 0 auto;">
+                    <input type="number" id="att-fdate-day" maxlength="2" style="width:87px;" placeholder="DAY" required>
+                    <select id="att-fdate-month" style="width:100px;" required>
+                        <option value="JAN">JAN</option><option value="FEB">FEB</option><option value="MAR">MAR</option>
+                        <option value="APR">APR</option><option value="MAY">MAY</option><option value="JUN">JUN</option>
+                        <option value="JUL">JUL</option><option value="AUG">AUG</option><option value="SEP">SEP</option>
+                        <option value="OCT">OCT</option><option value="NOV">NOV</option><option value="DEC">DEC</option>
+                    </select>
+                    <input type="number" id="att-fdate-year" maxlength="4" style="width:87px;" placeholder="YEAR" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="tdate">To Date:</label>
+                <div style="display: flex; gap: 5px; max-width: 350px; margin: 0 auto;">
+                    <input type="number" id="att-tdate-day" maxlength="2" style="width:87px;" placeholder="DAY" required>
+                    <select id="att-tdate-month" style="width:100px;" required>
+                        <option value="JAN">JAN</option><option value="FEB">FEB</option><option value="MAR">MAR</option>
+                        <option value="APR">APR</option><option value="MAY">MAY</option><option value="JUN">JUN</option>
+                        <option value="JUL">JUL</option><option value="AUG">AUG</option><option value="SEP">SEP</option>
+                        <option value="OCT">OCT</option><option value="NOV">NOV</option><option value="DEC">DEC</option>
+                    </select>
+                    <input type="number" id="att-tdate-year" maxlength="4" style="width:87px;" placeholder="YEAR" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="empcode">Employee ID:</label>
+                <input type="number" id="att-empcode" placeholder="ID" required>
+            </div>
+            <button type="submit">Get Attendance Report</button>
+        </form>
+        <div id="attendance-report-link" style="margin-top:20px;"></div>
+        <button2 class="button2" onclick="showPage('home-page')">Back</button2>
+    </div>
+    <!-- Overtime Report Page -->
+    <div class="container" id="overtime-page">
+        <h2 style="color: #007bff;">Overtime Report</h2>
+        <form id="overtimeForm">
+            <div class="form-group">
+                <label for="year">Year:</label>
+                <input type="number" id="ot-year" maxlength="4" required pattern="\d{4}" placeholder="YYYY">
+            </div>
+            <div class="form-group">
+                <label for="month">Month:</label>
+                <input type="number" id="ot-month" maxlength="2" min="1" max="12" required pattern="\d{2}" placeholder="MM">
+            </div>
+            <div class="form-group">
+                <label for="empcode">Employee ID:</label>
+                <input type="number" id="ot-empcode" placeholder="ID" required>
+            </div>
+            <button type="submit">Get Overtime Report</button>
+        </form>
+        <div id="overtime-report-link" style="margin-top:20px;"></div>
+        <button2 class="button2" onclick="showPage('home-page')">Back</button2>
+    </div>
+    <script>
+        // Helper: Show only one page at a time
+        function showPage(pageId) {
+            document.querySelectorAll('.container').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        // Sign in logic
+        function signin() {
+            const password = document.getElementById('password').value;
+            const error = document.getElementById('error');
+            if (btoa(password) === 'aGFkaXN1cg==') {
+                showPage('home-page');
+                error.textContent = '';
+            } else {
+                error.textContent = 'Wrong password. Try again!';
+            }
+        }
+        document.getElementById('password').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') signin();
+        });
+
+        // Month short names
+        const monthShorts = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+
+        // Set default values on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            // Punch
+            const now = new Date();
+            const year = now.getFullYear();
+            const monthIdx = now.getMonth();
+            const monthShort = monthShorts[monthIdx];
+            document.getElementById('fdate-day').value = "01";
+            document.getElementById('fdate-month').value = monthShort;
+            document.getElementById('fdate-year').value = year;
+            const lastDay = new Date(year, monthIdx + 1, 0).getDate();
+            document.getElementById('tdate-day').value = lastDay.toString().padStart(2, '0');
+            document.getElementById('tdate-month').value = monthShort;
+            document.getElementById('tdate-year').value = year;
+            // Attendance
+            document.getElementById('att-fdate-day').value = "01";
+            document.getElementById('att-fdate-month').value = monthShort;
+            document.getElementById('att-fdate-year').value = year;
+            document.getElementById('att-tdate-day').value = lastDay.toString().padStart(2, '0');
+            document.getElementById('att-tdate-month').value = monthShort;
+            document.getElementById('att-tdate-year').value = year;
+            // Overtime
+            document.getElementById('ot-year').value = year;
+            document.getElementById('ot-month').value = (monthIdx + 1).toString().padStart(2, '0');
+        });
+
+        // Punch month change logic
+        document.getElementById('fdate-month').addEventListener('change', function() {
+            document.getElementById('fdate-day').value = "01";
+        });
+        document.getElementById('tdate-month').addEventListener('change', function() {
+            let year = document.getElementById('tdate-year').value.trim();
+            if (!year) year = new Date().getFullYear();
+            const monthShort = document.getElementById('tdate-month').value;
+            const monthIdx = monthShorts.indexOf(monthShort);
+            if (monthIdx >= 0) {
+                const lastDay = new Date(year, monthIdx + 1, 0).getDate();
+                document.getElementById('tdate-day').value = lastDay.toString().padStart(2, '0');
+            }
+        });
+
+        // Attendance month change logic
+        document.getElementById('att-fdate-month').addEventListener('change', function() {
+            document.getElementById('att-fdate-day').value = "01";
+        });
+        document.getElementById('att-tdate-month').addEventListener('change', function() {
+            let year = document.getElementById('att-tdate-year').value.trim();
+            if (!year) year = new Date().getFullYear();
+            const monthShort = document.getElementById('att-tdate-month').value;
+            const monthIdx = monthShorts.indexOf(monthShort);
+            if (monthIdx >= 0) {
+                const lastDay = new Date(year, monthIdx + 1, 0).getDate();
+                document.getElementById('att-tdate-day').value = lastDay.toString().padStart(2, '0');
+            }
+        });
+
+        // Helper to build date string for report link
+        function getDateString(dayId, monthId, yearId) {
+            const day = document.getElementById(dayId).value.trim().padStart(2, '0');
+            const month = document.getElementById(monthId).value;
+            let year = document.getElementById(yearId).value.trim();
+            if (year.length === 4) year = year.slice(2);
+            year = year.padStart(2, '0');
+            if (!day || !month || !year) return '';
+            return `${day}-${month}-${year}`;
+        }
+
+        // Keep Punch employee code prefixed with immutable "P"
+        const punchEmpcodeInput = document.getElementById('empcode');
+        function normalizePunchEmpcode(value) {
+            const raw = (value || '').toUpperCase();
+            const digits = raw.replace(/[^\d]/g, '');
+            return `P${digits}`;
+        }
+        punchEmpcodeInput.addEventListener('input', function() {
+            this.value = normalizePunchEmpcode(this.value);
+        });
+        punchEmpcodeInput.addEventListener('keydown', function(e) {
+            if ((e.key === 'Backspace' || e.key === 'Delete') && this.selectionStart <= 1) {
+                e.preventDefault();
+            }
+        });
+        punchEmpcodeInput.addEventListener('focus', function() {
+            if (!this.value || this.value.charAt(0) !== 'P') {
+                this.value = normalizePunchEmpcode(this.value);
+            }
+            if (this.selectionStart < 1) {
+                this.setSelectionRange(1, 1);
+            }
+        });
+
+        // Punch form submit
+        document.getElementById('punchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const fdate = getDateString('fdate-day', 'fdate-month', 'fdate-year');
+            const tdate = getDateString('tdate-day', 'tdate-month', 'tdate-year');
+            const empcode = normalizePunchEmpcode(document.getElementById('empcode').value.trim());
+            if (!fdate || !tdate || !/^P\d+$/.test(empcode)) {
+                document.getElementById('punch-report-link').innerHTML = "<span style='color:red;'>All fields are required.</span>";
+                return;
+            }
+            const url = `http://192.168.55.79:2052/reports/rwservlet?webkey&desformat=PDF&destype=cache&report=/u01/global/panacea/report/att_all_punch.rdf&P_FDATE=${encodeURIComponent(fdate)}&P_TDATE=${encodeURIComponent(tdate)}&P_EMPCODE=${encodeURIComponent(empcode)}`;
+            window.open(url, '_blank');
+            document.getElementById('punch-report-link').innerHTML = `<a href="${url}" target="_blank"></a>`;
+        });
+
+        // Attendance form submit
+        document.getElementById('attendanceForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const fdate = getDateString('att-fdate-day', 'att-fdate-month', 'att-fdate-year');
+            const tdate = getDateString('att-tdate-day', 'att-tdate-month', 'att-tdate-year');
+            const attEmpInput = document.getElementById('att-empcode').value.trim();
+            const empDigits = attEmpInput.replace(/\D/g, '');
+            const empcode = empDigits ? `P${empDigits}` : '';
+            if (!fdate || !tdate || !empcode) {
+                document.getElementById('attendance-report-link').innerHTML = "<span style='color:red;'>All fields are required.</span>";
+                return;
+            }
+            const url = `http://192.168.55.79:2052/reports/rwservlet?webkey&desformat=PDF&destype=cache&report=/u01/global/panacea/report/no_out_punch.rdf&DT1=${encodeURIComponent(fdate)}&dt2=${encodeURIComponent(tdate)}&P_UNITID=${encodeURIComponent('Unit-20')}&p_empcode=${encodeURIComponent(empcode)}`;
+            window.open(url, '_blank');
+            document.getElementById('attendance-report-link').innerHTML = `<a href="${url}" target="_blank"></a>`;
+        });
+
+        // Overtime form submit
+        document.getElementById('overtimeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const year = document.getElementById('ot-year').value.trim();
+            let month = document.getElementById('ot-month').value.trim();
+            const empcode = document.getElementById('ot-empcode').value.trim();
+            if (!/^\d{4}$/.test(year)) {
+                document.getElementById('overtime-report-link').innerHTML = "<span style='color:red;'>Year must be 4 digits.</span>";
+                return;
+            }
+            if (!/^\d{1,2}$/.test(month) || parseInt(month) < 1 || parseInt(month) > 12) {
+                document.getElementById('overtime-report-link').innerHTML = "<span style='color:red;'>Month must be between 01 and 12.</span>";
+                return;
+            }
+            month = month.padStart(2, '0');
+            if (!/^\d+$/.test(empcode)) {
+                document.getElementById('overtime-report-link').innerHTML = "<span style='color:red;'>Employee code must be a number.</span>";
+                return;
+            }
+            const url = `http://192.168.55.79:2052/reports/rwservlet?webkey&desformat=PDF&destype=cache&report=/u01/global/panacea/report/hospital_ot.rdf&P_year=${encodeURIComponent(year)}&P_month=${encodeURIComponent(month)}&P_EMPCODE=${encodeURIComponent(empcode)}`;
+            window.open(url, '_blank');
+            document.getElementById('overtime-report-link').innerHTML = `<a href="${url}" target="_blank"></a>`;
+        });
+    </script>
+</body>
+</html>
