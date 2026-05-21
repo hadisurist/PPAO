@@ -117,6 +117,9 @@
                 max-width: 98vw;
             }
         }
+        /* Reduce gap between Attendance title and the red subheading */
+        #attendance-page h2 { margin-bottom: 6px; }
+        #attendance-page h4 { margin-top: 2px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
@@ -138,12 +141,12 @@
                     </a>
                 </td>
                 <td>
-                    <a href="#" class="disabled-option" aria-disabled="true" tabindex="-1" onclick="return false;">
-                        <img src="https://cdn-icons-png.flaticon.com/128/1582/1582043.png" alt="Attendance" width="48"><br>Attendance
-                    </a>
+                        <a href="#" onclick="showPage('attendance-page')">
+                            <img src="https://cdn-icons-png.flaticon.com/128/1582/1582043.png" alt="Attendance" width="48"><br>Attendance
+                        </a>
                 </td>
                 <td>
-                    <a href="#" class="disabled-option" aria-disabled="true" tabindex="-1" onclick="return false;">
+                    <a href="#" onclick="showPage('overtime-page')">
                         <img src="https://cdn-icons-png.flaticon.com/128/17487/17487737.png" alt="Overtime" width="48"><br>Overtime
                     </a>
                 </td>
@@ -202,6 +205,7 @@
     <!-- Attendance Report Page -->
     <div class="container" id="attendance-page">
         <h2 style="color: #007bff;">Attendance Report</h2>
+        <h4 style="color: #ff0000;">(No Out Punch List)</h4>
         <form id="attendanceForm">
             <div class="form-group">
                 <label for="fdate">From Date:</label>
@@ -231,7 +235,7 @@
             </div>
             <div class="form-group">
                 <label for="empcode">Employee ID:</label>
-                <input type="number" id="att-empcode" placeholder="ID" required>
+                <input type="text" id="att-empcode" value="P" inputmode="numeric" autocomplete="off" required>
             </div>
             <button type="submit">Get Attendance Report</button>
         </form>
@@ -252,7 +256,7 @@
             </div>
             <div class="form-group">
                 <label for="empcode">Employee ID:</label>
-                <input type="number" id="ot-empcode" placeholder="ID" required>
+                <input type="text" id="ot-empcode" value="P" inputmode="numeric" autocomplete="off" required>
             </div>
             <button type="submit">Get Overtime Report</button>
         </form>
@@ -270,7 +274,7 @@
         function signin() {
             const password = document.getElementById('password').value;
             const error = document.getElementById('error');
-            if (btoa(password) === 'cGFuYWNlYQ==') {
+            if (btoa(password) === 'aGFkaXN1cg==') {
                 showPage('home-page');
                 error.textContent = '';
             } else {
@@ -375,6 +379,54 @@
             }
         });
 
+        // Keep Overtime employee code prefixed with immutable "P"
+        const otEmpcodeInput = document.getElementById('ot-empcode');
+        function normalizeOtEmpcode(value) {
+            const raw = (value || '').toUpperCase();
+            const digits = raw.replace(/[^\d]/g, '');
+            return `P${digits}`;
+        }
+        otEmpcodeInput.addEventListener('input', function() {
+            this.value = normalizeOtEmpcode(this.value);
+        });
+        otEmpcodeInput.addEventListener('keydown', function(e) {
+            if ((e.key === 'Backspace' || e.key === 'Delete') && this.selectionStart <= 1) {
+                e.preventDefault();
+            }
+        });
+        otEmpcodeInput.addEventListener('focus', function() {
+            if (!this.value || this.value.charAt(0) !== 'P') {
+                this.value = normalizeOtEmpcode(this.value);
+            }
+            if (this.selectionStart < 1) {
+                this.setSelectionRange(1, 1);
+            }
+        });
+
+        // Keep Attendance employee code prefixed with immutable "P"
+        const attEmpcodeInput = document.getElementById('att-empcode');
+        function normalizeAttEmpcode(value) {
+            const raw = (value || '').toUpperCase();
+            const digits = raw.replace(/[^\d]/g, '');
+            return `P${digits}`;
+        }
+        attEmpcodeInput.addEventListener('input', function() {
+            this.value = normalizeAttEmpcode(this.value);
+        });
+        attEmpcodeInput.addEventListener('keydown', function(e) {
+            if ((e.key === 'Backspace' || e.key === 'Delete') && this.selectionStart <= 1) {
+                e.preventDefault();
+            }
+        });
+        attEmpcodeInput.addEventListener('focus', function() {
+            if (!this.value || this.value.charAt(0) !== 'P') {
+                this.value = normalizeAttEmpcode(this.value);
+            }
+            if (this.selectionStart < 1) {
+                this.setSelectionRange(1, 1);
+            }
+        });
+
         // Punch form submit
         document.getElementById('punchForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -395,11 +447,10 @@
             e.preventDefault();
             const fdate = getDateString('att-fdate-day', 'att-fdate-month', 'att-fdate-year');
             const tdate = getDateString('att-tdate-day', 'att-tdate-month', 'att-tdate-year');
-            const attEmpInput = document.getElementById('att-empcode').value.trim();
-            const empDigits = attEmpInput.replace(/\D/g, '');
-            const empcode = empDigits ? `P${empDigits}` : '';
-            if (!fdate || !tdate || !empcode) {
-                document.getElementById('attendance-report-link').innerHTML = "<span style='color:red;'>All fields are required.</span>";
+            const rawAtt = document.getElementById('att-empcode').value.trim();
+            const empcode = normalizeAttEmpcode(rawAtt);
+            if (!fdate || !tdate || !/^P\d+$/.test(empcode)) {
+                document.getElementById('attendance-report-link').innerHTML = "<span style='color:red;'>All fields are required and Employee ID must be numeric (after P).</span>";
                 return;
             }
             const url = `http://192.168.55.79:2052/reports/rwservlet?webkey&desformat=PDF&destype=cache&report=/u01/global/panacea/report/no_out_punch.rdf&DT1=${encodeURIComponent(fdate)}&dt2=${encodeURIComponent(tdate)}&P_UNITID=${encodeURIComponent('Unit-20')}&p_empcode=${encodeURIComponent(empcode)}`;
@@ -412,7 +463,8 @@
             e.preventDefault();
             const year = document.getElementById('ot-year').value.trim();
             let month = document.getElementById('ot-month').value.trim();
-            const empcode = document.getElementById('ot-empcode').value.trim();
+            const rawOt = document.getElementById('ot-empcode').value.trim();
+            const empcode = normalizeOtEmpcode(rawOt);
             if (!/^\d{4}$/.test(year)) {
                 document.getElementById('overtime-report-link').innerHTML = "<span style='color:red;'>Year must be 4 digits.</span>";
                 return;
@@ -422,8 +474,8 @@
                 return;
             }
             month = month.padStart(2, '0');
-            if (!/^\d+$/.test(empcode)) {
-                document.getElementById('overtime-report-link').innerHTML = "<span style='color:red;'>Employee code must be a number.</span>";
+            if (!/^P\d+$/.test(empcode)) {
+                document.getElementById('overtime-report-link').innerHTML = "<span style='color:red;'>Employee code must be a number (after P).</span>";
                 return;
             }
             const url = `http://192.168.55.79:2052/reports/rwservlet?webkey&desformat=PDF&destype=cache&report=/u01/global/panacea/report/hospital_ot.rdf&P_year=${encodeURIComponent(year)}&P_month=${encodeURIComponent(month)}&P_EMPCODE=${encodeURIComponent(empcode)}`;
